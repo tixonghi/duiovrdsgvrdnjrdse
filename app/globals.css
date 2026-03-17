@@ -1,0 +1,825 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* 
+ * BodyGenius AI - Premium Minimalist Design System
+ * 
+ * Design Philosophy:
+ * - Clean minimalism with lots of white space
+ * - Soft blue accent color (#4C6FFF) - trust, technology, calm
+ * - Inter font family for clear hierarchy
+ * - Subtle shadows and transitions
+ * - Premium feel like Apple Fitness / Peloton
+ */
+
+@theme inline {
+  /* Background Colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Fonts */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+  
+  /* Brand Colors - Calm Performance Minimalism */
+  --color-primary: #4C6FFF;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-light: #7B93FF;
+  --color-primary-dark: #3451CC;
+  
+  /* Success/Progress - Soft green */
+  --color-success: #22C55E;
+  --color-success-light: #4ADE80;
+  --color-success-dark: #16A34A;
+  
+  /* Warning - Soft amber */
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+  
+  /* Error - Moderate red */
+  --color-error: #EF4444;
+  --color-error-light: #F87171;
+  
+  /* Card System */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  /* Popover */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  /* Secondary */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  /* Muted */
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  /* Destructive */
+  --color-destructive: var(--destructive);
+  
+  /* Border & Input */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  /* Chart Colors */
+  --color-chart-1: #4C6FFF;
+  --color-chart-2: #22C55E;
+  --color-chart-3: #F59E0B;
+  --color-chart-4: #8B5CF6;
+  --color-chart-5: #EC4899;
+  
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* Border Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+}
+
+:root {
+  --radius: 0.75rem; /* 12px - smooth rounded corners */
+  
+  /* Light Mode - Premium Clean */
+  --background: #FAFBFC;           /* Very light blue-gray */
+  --foreground: #111827;           /* Near black for text */
+  --card: #FFFFFF;                 /* Pure white cards */
+  --card-foreground: #111827;
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+  --primary: #4C6FFF;              /* Soft blue */
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3F4F6;            /* Light gray */
+  --secondary-foreground: #111827;
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;     /* Medium gray */
+  --accent: #F3F4F6;
+  --accent-foreground: #111827;
+  --destructive: #EF4444;
+  --border: #E5E7EB;               /* Soft border */
+  --input: #E5E7EB;
+  --ring: #4C6FFF;
+  
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #4C6FFF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3F4F6;
+  --sidebar-accent-foreground: #111827;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #4C6FFF;
+}
+
+/* Dark Mode */
+.dark {
+  --background: #0F1115;           /* Deep dark */
+  --foreground: #F9FAFB;           /* Light text */
+  --card: #1A1D24;                 /* Dark card */
+  --card-foreground: #F9FAFB;
+  --popover: #1A1D24;
+  --popover-foreground: #F9FAFB;
+  --primary: #4C6FFF;              /* Same accent color */
+  --primary-foreground: #FFFFFF;
+  --secondary: #262A33;            /* Darker gray */
+  --secondary-foreground: #F9FAFB;
+  --muted: #262A33;
+  --muted-foreground: #9CA3AF;
+  --accent: #262A33;
+  --accent-foreground: #F9FAFB;
+  --destructive: #F87171;
+  --border: #262A33;
+  --input: #262A33;
+  --ring: #4C6FFF;
+  
+  /* Sidebar */
+  --sidebar: #1A1D24;
+  --sidebar-foreground: #F9FAFB;
+  --sidebar-primary: #4C6FFF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #262A33;
+  --sidebar-accent-foreground: #F9FAFB;
+  --sidebar-border: #262A33;
+  --sidebar-ring: #4C6FFF;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Better focus states - use ring-inset for inputs to prevent overflow */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+  
+  /* Input-specific focus - keep ring inside bounds */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-inset ring-primary;
+  }
+}
+
+/* Custom Animations for Premium Feel */
+@layer utilities {
+  /* Smooth scale on press */
+  .press-scale {
+    transition: transform 0.15s ease-out;
+  }
+  .press-scale:active {
+    transform: scale(0.97);
+  }
+  
+  /* Fade in animation */
+  .fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Slide up animation */
+  .slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+  
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Progress bar animation */
+  .progress-animate {
+    animation: progressGrow 1s ease-out forwards;
+  }
+  
+  @keyframes progressGrow {
+    from { width: 0%; }
+  }
+  
+  /* Soft shadow for cards */
+  .card-shadow {
+    box-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 4px 8px rgba(0, 0, 0, 0.04),
+      0 8px 16px rgba(0, 0, 0, 0.02);
+  }
+  
+  /* Card hover effect */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.04),
+      0 8px 16px rgba(0, 0, 0, 0.08),
+      0 16px 32px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Safe area for mobile bottom nav */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  
+  /* Glass effect */
+  .glass {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #4C6FFF 0%, #7B93FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Gradient background */
+  .gradient-bg {
+    background: linear-gradient(135deg, #4C6FFF 0%, #7B93FF 100%);
+  }
+  
+  /* Shimmer loading effect */
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
+}
+
+/* Hide scrollbar for chat messages */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(76, 111, 255, 0.2);
+  color: inherit;
+}
+
+/* Input placeholder styling */
+::placeholder {
+  color: #9CA3AF;
+  opacity: 1;
+}
+
+.dark ::placeholder {
+  color: #6B7280;
+}
+
+/* Focus ring animation */
+@keyframes focusRing {
+  0% { box-shadow: 0 0 0 0 rgba(76, 111, 255, 0.4); }
+  100% { box-shadow: 0 0 0 4px rgba(76, 111, 255, 0); }
+}
+
+/* Button ripple effect */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.ripple:active::after {
+  width: 200%;
+  height: 200%;
+}
+
+/* Typing indicator animation */
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+/* Toast notifications */
+.toast-enter {
+  animation: toastEnter 0.3s ease-out forwards;
+}
+
+@keyframes toastEnter {
+  from { 
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-exit {
+  animation: toastExit 0.2s ease-in forwards;
+}
+
+@keyframes toastExit {
+  from { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to { 
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+/* Number counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.count-up {
+  animation: countUp 0.4s ease-out forwards;
+}
+
+/* Pulse effect for active states */
+.pulse-primary {
+  animation: pulsePrimary 2s ease-in-out infinite;
+}
+
+@keyframes pulsePrimary {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 111, 255, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(76, 111, 255, 0); }
+}
+
+/* Skeleton loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--secondary) 25%,
+    var(--muted) 50%,
+    var(--secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Smooth page transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Chart styling */
+.recharts-cartesian-axis-tick-value {
+  fill: #9CA3AF;
+  font-size: 10px;
+}
+
+.dark .recharts-cartesian-axis-tick-value {
+  fill: #6B7280;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ============================================================================
+   ENHANCED ANIMATIONS - Smooth Micro-Interactions
+   ============================================================================ */
+
+/* Button gradient hover effect */
+.btn-gradient {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.btn-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-gradient:hover::before {
+  left: 100%;
+}
+
+/* Key action button with attention pulse */
+.btn-attention {
+  position: relative;
+  animation: btnAttention 2.5s ease-in-out infinite;
+}
+
+@keyframes btnAttention {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(76, 111, 255, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(76, 111, 255, 0);
+  }
+}
+
+/* Navigation button active state with gradient */
+.nav-btn-active {
+  background: linear-gradient(135deg, rgba(76, 111, 255, 0.1) 0%, rgba(76, 111, 255, 0.05) 100%);
+  position: relative;
+}
+
+.nav-btn-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, #4C6FFF 0%, #7B93FF 100%);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Stagger animation for list items */
+.stagger-item {
+  opacity: 0;
+  animation: staggerFadeIn 0.4s ease-out forwards;
+}
+
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal popup animation */
+.modal-enter {
+  animation: modalEnter 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-exit {
+  animation: modalExit 0.2s ease-in forwards;
+}
+
+@keyframes modalExit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+}
+
+/* Card hover enhancement */
+.card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.dark .card-interactive:hover {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Tab content transition */
+.tab-content-enter {
+  animation: tabContentEnter 0.3s ease-out forwards;
+}
+
+@keyframes tabContentEnter {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Progress bar smooth color transition */
+.progress-smooth {
+  transition: width 0.5s ease-out, background-color 0.4s ease;
+}
+
+/* Icon button hover effect */
+.icon-btn-hover {
+  transition: transform 0.15s ease, background-color 0.2s ease;
+}
+
+.icon-btn-hover:hover {
+  transform: scale(1.08);
+}
+
+.icon-btn-hover:active {
+  transform: scale(0.95);
+}
+
+/* Ripple effect for touch interactions */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1);
+  transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+.ripple-effect:active::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(40);
+  transition: opacity 0s, transform 0s;
+}
+
+/* Smooth scale on press for all interactive elements */
+.press-scale-smooth {
+  transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.press-scale-smooth:active {
+  transform: scale(0.98);
+}
+
+/* Achievement notification popup */
+.achievement-pop {
+  animation: achievementPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes achievementPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  60% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Success checkmark animation */
+.success-check {
+  animation: successCheck 0.5s ease-out forwards;
+}
+
+@keyframes successCheck {
+  0% {
+    transform: scale(0) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Number change animation */
+.number-change {
+  animation: numberChange 0.3s ease-out;
+}
+
+@keyframes numberChange {
+  0% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Floating subtle animation for decorative elements */
+.float-subtle {
+  animation: floatSubtle 3s ease-in-out infinite;
+}
+
+@keyframes floatSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Glow effect for primary buttons */
+.glow-primary {
+  box-shadow: 0 0 0 0 rgba(76, 111, 255, 0);
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-primary:hover {
+  box-shadow: 0 4px 20px rgba(76, 111, 255, 0.35);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #111827;
+    --input: #111827;
+  }
+  
+  .dark {
+    --border: #F9FAFB;
+    --input: #F9FAFB;
+  }
+}
+
+/* Number input spinner styling for dark theme */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+/* Dark theme number spinners */
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1);
+}
+
+/* Firefox number input */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Show spinners on hover/focus for better UX */
+input[type="number"]:hover::-webkit-inner-spin-button,
+input[type="number"]:hover::-webkit-outer-spin-button,
+input[type="number"]:focus::-webkit-inner-spin-button,
+input[type="number"]:focus::-webkit-outer-spin-button {
+  opacity: 1;
+}
