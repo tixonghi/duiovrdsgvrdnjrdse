@@ -1,0 +1,28 @@
+{
+  "name": "BodyGenius AI",
+  "short_name": "BodyGenius",
+  "description": "Персональный AI-тренер для тренировок и питания",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F9FC",
+  "theme_color": "#4C6FFF",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo-bg.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "fitness", "lifestyle"],
+  "lang": "ru",
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Начать тренировку",
+      "url": "/?action=workout",
+      "icons": [{ "src": "/logo-bg.png", "sizes": "96x96" }]
+    }
+  ]
+}

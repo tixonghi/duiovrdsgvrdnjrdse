@@ -1,0 +1,445 @@
+// BodyGenius AI - Production Database Schema v2.0
+// Full i18n, currency support, proper exercise IDs
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// USER MANAGEMENT
+// ============================================================================
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  passwordHash  String
+  name          String?
+  
+  // Profile data
+  age           Int?
+  gender        String?       // male, female, other
+  height        Float?        // cm
+  currentWeight Float?        // kg
+  targetWeight  Float?        // kg
+  
+  // Localization
+  language      String        @default("ru") // ru, en
+  currency      String        @default("RUB") // RUB, USD, EUR, BYN, UAH
+  
+  // Fitness profile
+  fitnessGoal   String?       // fat_loss, muscle_gain, endurance, maintenance
+  fitnessLevel  String?       // beginner, intermediate, advanced
+  equipment     String?       // JSON array
+  budget        Float?        // Weekly budget in user's currency
+  
+  // App state
+  onboardingCompleted Boolean @default(false)
+  subscriptionTier     String  @default("free") // free, pro, elite
+  subscriptionExpiresAt DateTime?
+  
+  // UI state
+  hasSeenDisclaimer   Boolean  @default(false) // Medical disclaimer
+  
+  // AI limits
+  dailyChatMessages   Int     @default(0)
+  lastChatReset       DateTime?
+  
+  // Timestamps
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  // Relations
+  workoutPlans      WorkoutPlan[]
+  workoutSessions   WorkoutSession[]
+  weightLogs        WeightLog[]
+  nutritionPlans    NutritionPlan[]
+  mealLogs          MealLog[]
+  aiChats           AiChat[]
+  achievements      UserAchievement[]
+  subscriptions     Subscription[]
+}
+
+// ============================================================================
+// EXERCISE DATABASE - With real media URLs
+// ============================================================================
+
+model Exercise {
+  id              String   @id @default(cuid())
+  slug            String   @unique // forward_lunge, pushup_standard
+  
+  // English content
+  name            String
+  instructions    String   // JSON array
+  tips            String?  // JSON array
+  warnings        String?  // JSON array
+  
+  // Russian content
+  nameRu          String
+  instructionsRu  String   // JSON array
+  tipsRu          String?  // JSON array
+  warningsRu      String?  // JSON array
+  
+  // Classification
+  level           String   // beginner, intermediate, advanced
+  goal            String   // fat_loss, muscle_gain, endurance, strength
+  category        String   // strength, cardio, flexibility, balance
+  equipment       String   // none, dumbbells, barbell, home, gym
+  
+  // Muscle groups
+  primaryMuscles  String   // JSON array
+  secondaryMuscles String?
+  
+  // Exercise details
+  difficulty      Int      @default(3)
+  caloriesPerRep  Float?
+  estimatedTime   Int?
+  
+  // Media - UNIQUE for each exercise (real URLs)
+  gifUrl          String?  // Actual GIF URL
+  videoUrl        String?  // Actual video URL
+  imageUrl        String?
+  
+  // Metadata
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  workoutExercises WorkoutExercise[]
+}
+
+// ============================================================================
+// WORKOUT PLANNING
+// ============================================================================
+
+model WorkoutPlan {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Plan details (localized)
+  name            String   // English
+  nameRu          String   // Russian
+  description     String?
+  descriptionRu   String?
+  goal            String
+  level           String
+  daysPerWeek     Int      @default(3)
+  durationWeeks   Int      @default(4)
+  
+  // Status
+  isActive        Boolean  @default(true)
+  isCompleted     Boolean  @default(false)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  startDate       DateTime?
+  endDate         DateTime?
+  
+  // Relations
+  workouts        Workout[]
+}
+
+model Workout {
+  id              String   @id @default(cuid())
+  planId          String
+  plan            WorkoutPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  
+  // Workout details (localized)
+  dayOfWeek       Int
+  weekNumber      Int      @default(1)
+  name            String
+  nameRu          String
+  type            String
+  estimatedDuration Int?
+  
+  // Status
+  isCompleted     Boolean  @default(false)
+  completedAt     DateTime?
+  
+  // Relations
+  exercises       WorkoutExercise[]
+  sessions        WorkoutSession[]
+}
+
+model WorkoutExercise {
+  id              String   @id @default(cuid())
+  workoutId       String
+  workout         Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exerciseId      String
+  exercise        Exercise @relation(fields: [exerciseId], references: [id])
+  
+  // Exercise configuration
+  order           Int      @default(1)
+  sets            Int      @default(3)
+  reps            String?
+  restSeconds     Int?     @default(60)
+  weight          Float?
+  weightUnit      String   @default("kg")
+  
+  // Notes
+  notes           String?
+  
+  // Completion tracking
+  completedSets   Int      @default(0)
+  isCompleted     Boolean  @default(false)
+}
+
+model WorkoutSession {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workoutId       String?
+  workout         Workout? @relation(fields: [workoutId], references: [id], onDelete: SetNull)
+  
+  // Session data
+  startedAt       DateTime @default(now())
+  completedAt     DateTime?
+  duration        Int?
+  
+  // Performance
+  totalExercises  Int      @default(0)
+  completedExercises Int   @default(0)
+  caloriesBurned  Float?
+  
+  // User feedback
+  energyLevel     Int?
+  difficultyRating Int?
+  notes           String?
+}
+
+// ============================================================================
+// NUTRITION PLANNING
+// ============================================================================
+
+model NutritionPlan {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Plan details (localized)
+  name            String
+  nameRu          String
+  description     String?
+  descriptionRu   String?
+  
+  // Daily targets
+  targetCalories  Float
+  targetProtein   Float
+  targetCarbs     Float
+  targetFat       Float
+  
+  // Budget
+  weeklyBudget    Float?   // In user's currency
+  
+  // Preferences
+  dietaryRestrictions String?
+  allergies       String?
+  mealsPerDay     Int      @default(3)
+  
+  // Status
+  isActive        Boolean  @default(true)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  meals           Meal[]
+}
+
+model Meal {
+  id              String   @id @default(cuid())
+  planId          String
+  plan            NutritionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  
+  // Meal details (localized)
+  name            String   // English
+  nameRu          String   // Russian
+  type            String   // breakfast, lunch, dinner, snack
+  time            String?
+  
+  // Nutritional info
+  calories        Float
+  protein         Float
+  carbs           Float
+  fat             Float
+  fiber           Float?
+  
+  // Recipe (localized)
+  ingredients     String   // JSON array (English)
+  ingredientsRu   String   // JSON array (Russian)
+  instructions    String   // JSON array (English)
+  instructionsRu  String   // JSON array (Russian)
+  
+  // Time and cost
+  prepTime        Int?
+  cookTime        Int?
+  totalTime       Int?
+  estimatedCost   Float?   // In base currency (RUB)
+  
+  // Image
+  imageUrl        String?
+}
+
+model MealLog {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealId          String?
+  
+  // Log data
+  date            DateTime @default(now())
+  mealType        String
+  
+  // Actual intake
+  calories        Float
+  protein         Float
+  carbs           Float
+  fat             Float
+  
+  // Notes
+  notes           String?
+  imageUrl        String?
+}
+
+// ============================================================================
+// PROGRESS TRACKING
+// ============================================================================
+
+model WeightLog {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Measurement
+  weight          Float
+  date            DateTime @default(now())
+  
+  // Additional metrics
+  bodyFatPercentage Float?
+  muscleMass      Float?
+  waterPercentage Float?
+  
+  // Notes
+  notes           String?
+  photoUrl        String?
+}
+
+// ============================================================================
+// AI FEATURES
+// ============================================================================
+
+model AiChat {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Chat data
+  role            String
+  content         String
+  
+  // Context
+  contextType     String?
+  relatedPlanId   String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+}
+
+// ============================================================================
+// SUBSCRIPTIONS & PAYMENTS
+// ============================================================================
+
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Subscription details
+  tier            String
+  status          String
+  
+  // Payment info
+  paymentProvider String?
+  paymentId       String?
+  
+  // Billing
+  amount          Float?
+  currency        String   @default("RUB")
+  interval        String?
+  
+  // Dates
+  startDate       DateTime @default(now())
+  endDate         DateTime?
+  canceledAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ============================================================================
+// ACHIEVEMENTS
+// ============================================================================
+
+model Achievement {
+  id              String   @id @default(cuid())
+  code            String   @unique
+  
+  // Localized names
+  name            String
+  nameRu          String
+  description     String
+  descriptionRu   String
+  
+  icon            String?
+  category        String
+  
+  // Requirements
+  requirementType String?
+  requirementValue Int?
+  
+  // Reward
+  xpPoints        Int      @default(0)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  
+  // Relations
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId   String
+  achievement     Achievement @relation(fields: [achievementId], references: [id])
+  
+  // Unlock data
+  unlockedAt     DateTime @default(now())
+  
+  // Progress tracking
+  progress       Float    @default(100)
+  
+  @@unique([userId, achievementId])
+}
+
+// ============================================================================
+// CURRENCY RATES (for conversion)
+// ============================================================================
+
+model CurrencyRate {
+  id              String   @id @default(cuid())
+  fromCurrency    String   // RUB, USD, EUR, BYN, UAH
+  toCurrency      String
+  rate            Float    // 1 fromCurrency = rate toCurrency
+  updatedAt       DateTime @default(now())
+  
+  @@unique([fromCurrency, toCurrency])
+}
